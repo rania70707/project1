@@ -1,6 +1,6 @@
 package project1;
 
-public class TrainingCenter {
+public class TrainingCenter implements Matchable {
     private String name;
     private String city;
     private String field;
@@ -15,6 +15,7 @@ public class TrainingCenter {
         this.seats = seats;
     }
 
+    @Override
     public int calculateScore(Student student) {
         int score = 0;
    

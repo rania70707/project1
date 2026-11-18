@@ -2,8 +2,7 @@ package project1;
 
 import java.util.ArrayList;
 
-public class Student {
-    private String name;
+public class Student extends Person {
     private String kkuld;
     private String major;
     private ArrayList<String> courses;
@@ -12,7 +11,7 @@ public class Student {
     private TrainingCenter internship;
 
     public Student(String name, String kkuld, String major) {
-        this.name = name;
+        super(name);
         this.kkuld = kkuld;
         this.major = major;
         this.courses = new ArrayList<>();
@@ -42,10 +41,6 @@ public class Student {
         this.internship = center;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getKkuld() {
         return kkuld;
     }
@@ -60,6 +55,11 @@ public class Student {
 
     public String getProjectField() {
         return projectField;
+    }
+    
+    public String getProjectTitle() {
+    	     return projectTitle;
+    	
     }
 
     public TrainingCenter getInternship() {
