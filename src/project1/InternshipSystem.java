@@ -5,9 +5,11 @@ public class InternshipSystem {
 	
 	static Scanner input = new Scanner (System.in);
 	static ArrayList<Student>students = new ArrayList<>();
+	static ArrayList<TrainingCenter> centers = new ArrayList<>();
 
 	public static void main(String[] args) {
 		int choice = 0 ;
+		initializeCenters();
 		
 		do {
 			System.out.println("\n=====BSC Internship Matching System ====");
@@ -44,16 +46,16 @@ public class InternshipSystem {
 				registerGraduationProject();
 				break;
 			case 4:
-				System.out.println("Find Matching Training Centers - To be integrated");
+				findMatchingCenters();
 				break;
 			case 5:
-				System.out.println("AssingInternship - To be integrated ");
+				assignInternship();
 				break;
 			case 6:
-				System.out.println("Search Student - To be integrated ");
+				searchStudent();
 				break;
 			case 7:
-				System.out.println("Display All Students - To be integrated ");
+				displayAllStudents();
 				break;
 			case 8:
 				System.out.println("Thank you for using the BSC internship Matching System. ");
@@ -74,7 +76,7 @@ public class InternshipSystem {
 	
 	public static void addNewStudent() {
 		if (students.size()>=10) {
-			System.out.println("The System has reached the Maximum Number of student cannot add a new student");
+			System.out.println("The System has reached the maximum number of students. Cannot add a new student.");
 			return;
 		}
 		System.out.println("\n    Add New Student     ");
@@ -97,7 +99,7 @@ public class InternshipSystem {
 			System.out.println("Enter KKU ID:");
 			kkuId= input.nextLine().trim();
 			if (!kkuId.matches("4\\d{8}")) {
-				System.out.println("Invalid KKU ID The ID must  contain 9 digits and start with 4.");
+				System.out.println("Invalid KKU ID. The ID must  contain 9 digits and start with 4.");
 				continue;
 			}
 			if (findStudent(kkuId) != null) {
@@ -121,6 +123,8 @@ public class InternshipSystem {
 			}
 		//create new student 
 		Student newStudent = new Student(name, kkuId, major);
+		Person person = newStudent;
+		System.out.println("Student Name: " + person.getName());
 		students.add(newStudent); 
 		System.out.println("Student Added Successfully");
 	}
@@ -151,7 +155,7 @@ public class InternshipSystem {
 			NumberOfCourses =
 					Integer.parseInt(input.nextLine().trim());
 		} catch (NumberFormatException e ) {
-			System.out.println("Invalid Number of courses A student can register between 1 and 5 courses.");
+			System.out.println("Invalid Number of courses. A student can register between 1 and 5 courses.");
 			return;
 		}
 		//Validate courses Number 
@@ -184,7 +188,7 @@ public class InternshipSystem {
 		
 	}
 	
-	//Option:3
+	//Option 3:
 	public static void registerGraduationProject() {
 		System.out.println("\n   Register Graduation Project    ");
 		System.out.println("Enter KKU ID:");
@@ -252,7 +256,7 @@ public class InternshipSystem {
 		}
 		return null;	
 	}
-	// cheek duplicate courses 
+	// check duplicate courses 
 	
 	public static boolean hasCourseIgnoreCase(Student student, String course) {
 		for (String existingCourse :student.getCourses() ) {
@@ -276,8 +280,278 @@ public class InternshipSystem {
 		}
 		return result.trim();
 	}
-	
+	// adding the five training centers
+	public static void initializeCenters() {
+		
+		centers.add(new TrainingCenter(
+				"Asir Software House",
+				"Abha",
+				"Software Development",
+				new String[] {
+						"Java Programming",
+						"Data Structures",
+						"Web Development",
+						"Database Systems"
+				},
+				3
+		));
+		centers.add(new TrainingCenter(
+				"Smart Vision AI Lab",
+				"Riyadh",
+				"Artificial Intelligence",
+				new String[] {
+						"Artificial Intelligence",
+						"Machine Learning",
+						"Python Programming"
+				
+				},
+				2
+		));
+		centers.add(new TrainingCenter(
+				"Secure Gate Cyber Center",
+				"Jeddah",
+				"Cybersecurity",
+				new String[] {
+						"Network Security",
+						"Cryptography",
+						"Operating Systems"
+				},
+				2
+		));
+		centers.add(new TrainingCenter(
+				"DataWave Analytics",
+				"Khamis Mushait",
+				"Data Science",
+				new String[] {
+						"Database Systems",
+						"Statistics",
+						"Python Programming",
+						"Machine Learning"
+				},
+				3
+		));
+		centers.add(new TrainingCenter(
+				"NetLink Telecom",
+				"Dammam",
+				"Networking",
+				new String[] {
+						"Computer Networks",
+						"Operating Systems",
+						"Network Security"
+				},
+				2
+		));
+				
 	}
+	public static TrainingCenter getBestMatch(Student student) {
+		TrainingCenter bestCenter = null;
+		int bestScore = -1;
+		
+		for (TrainingCenter center : centers) {
+			if (center.hasSeats()) {
+				int score = center.calculateScore(student);
+				
+				if (score > bestScore) {
+					bestScore = score;
+					bestCenter = center;
+				}
+			}
+		}
+		return bestCenter;
+	}
+	
+	// Option 4:
+	public static void findMatchingCenters() {
+		System.out.println("\nFind Matching Training Centers");
+		System.out.println("Enter KKU ID:");
+		
+		String id = input.nextLine().trim();
+		
+		if (!id.matches("4\\d{8}")) {
+			System.out.println("Invalid KKU ID. The ID must contain 9 digits and start with 4.");
+			return;
+		}
+		
+		Student student = findStudent(id);
+		
+		if (student == null) {
+			System.out.println("Student not found.");
+			return;
+		}
+		if (student.getCourses().isEmpty()) {
+			System.out.println("No courses have been registered for this student. Please register courses first.");
+			return;
+		}
+		
+		if (!student.hasProject()) {
+			System.out.println("No graduation project has been registered for this student, Please register the graduation project first.");
+			return;
+		}
+	
+	int bestScore = -1;
+	TrainingCenter bestCenter = null;
+	
+	System.out.println("\nTraining Centers Matching Results:");
+	System.out.printf("%-28s %-20s %-25s %-10s%n", "Center Name", "City", "Field", "Score");
+	
+	for (TrainingCenter center : centers) {
+		int score = center.calculateScore(student);
+		
+		System.out.printf("%-28s %-20s %-25s %d%%%n",
+				center.getName(), center.getCity(), center.getField(), score);
+		
+		if (score > bestScore) {
+			bestScore = score;
+			bestCenter = center;
+		}
+	}
+	
+	if (bestCenter != null) {
+		System.out.println("\nBest Match: " + bestCenter.getName());
+		System.out.println("Matching Score: " + bestScore + "%");
+	}
+	
+	else {
+		System.out.println("No matching training center found.");
+	}
+	}
+	//Option 5: 
+	public static void assignInternship() {
+		System.out.println("\nAssign Internship");
+		System.out.println("Enter KKU ID:");
+		
+		String id = input.nextLine().trim();
+		
+		if (!id.matches("4\\d{8}")) {
+			System.out.println("Invalid KKU ID. The ID must contain 9 digits and start with 4.");
+			return;
+		}
+		
+		Student student = findStudent(id);
+		
+		if (student == null) {
+			System.out.println("Student not found");
+			return;
+		}
+		if (student.getCourses().isEmpty()) {
+			System.out.println("No courses have been registered for this student. Please register courses first.");
+			return;
+		}
+		
+		if (!student.hasProject()) {
+			System.out.println("No graduation project has been registered for this student. Please register the graduation project first.");
+			return;
+		}
+		
+		if (student.getInternship() != null) {
+			System.out.println("This student is already assigned to " + student.getInternship().getName() + ".");
+			return;
+		}
+		TrainingCenter bestCenter = getBestMatch(student);
+		int bestScore = bestCenter != null ? bestCenter.calculateScore(student) : -1;
+		
+	if (bestCenter != null) {
+		student.setInternship(bestCenter);
+		bestCenter.takeSeat();
+		
+		System.out.println("Internship assigned successfully.");
+		System.out.println("Center: " + bestCenter.getName());
+		System.out.println("City: " + bestCenter.getCity());
+		System.out.println("Score: " + bestScore + "%");
+		}
+	else {
+		System.out.println("No training centers have available seats.");
+	}
+  }
+	// Option 6:
+	public static void searchStudent () {
+		System.out.println("\nSearch Student");
+		System.out.println("Enter KKU ID:");
+		
+		String id = input.nextLine().trim();
+		
+		if (!id.matches("4\\d{8}")) {
+			System.out.println("Invalid KKU ID. The ID must contain 9 digits and start with 4.");
+			return;
+		}
+		
+		Student student = findStudent(id);
+		
+		if (student == null) {
+			System.out.println("Student not found.");
+			return;
+		}
+		System.out.println("\nStudent Information");
+		System.out.println("Name: " + student.getName());
+		System.out.println("KKU ID: " + student.getKkuld());
+		System.out.println("Major: " + student.getMajor());
+		
+		System.out.println("Courses:");
+		if (student.getCourses().isEmpty()) {
+			System.out.println("No courses registered.");
+		}
+		else {
+			for (String course : student.getCourses()) {
+				System.out.println("-" + course);
+			}
+		}
+		
+		if (student.hasProject()) {
+			System.out.println("Graduation Project Title: " + student.getProjectTitle());
+			System.out.println("Graduation Project Field: " + student.getProjectField());
+		}
+		else {
+			System.out.println("No graduation project registered.");
+		}
+		
+		if (student.getInternship() != null) {
+			System.out.println("Internship Center: " + student.getInternship().getName());
+			System.out.println("City: " + student.getInternship().getCity());
+		}
+		else {
+			System.out.println("No internship assigned.");
+		}
+	}
+	//Option 7:
+	public static void displayAllStudents() {
+		System.out.println("\nDisplay All Students");
+		
+		if (students.isEmpty()) {
+			System.out.println("No students registered.");
+			return;	
+		}
+		
+		System.out.printf("%-25s %-15s %-25s%n", "Name", "KKU ID", "Major");
+		System.out.println("-------------------------------------------------------------------------------");
+		
+		for (Student student : students) {
+			System.out.printf("%-25s %-15s %-25s%n", student.getName(), student.getKkuld(), student.getMajor());
+		}
+		int assigned = 0;
+		int notAssigned = 0;
+		
+		for (Student student : students) {
+			if (student.getInternship() != null) {
+				assigned++;
+			}
+			else {
+				notAssigned++;
+			}
+		}
+		
+		System.out.println("\nStudent Statistics:");
+		System.out.println("Total Students: " + students.size());
+		System.out.println("Assigned Students: " + assigned);
+		System.out.println("Not Assigned Students: " + notAssigned);
+	}
+}
+
+
+
+	
+
+
+
 	
 	
 	
