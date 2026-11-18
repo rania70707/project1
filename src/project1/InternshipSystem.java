@@ -79,9 +79,9 @@ public class InternshipSystem {
 			System.out.println("The System has reached the maximum number of students. Cannot add a new student.");
 			return;
 		}
-		System.out.println("\n    Add New Student     ");
+		System.out.println("\n=====Add New Student=====");
 		
-		//entar student name
+		//enter student name
 		
 		String name;
 		while (true) {
@@ -131,7 +131,7 @@ public class InternshipSystem {
 	
 	//Option 2 :
 	public static void RegisterCourses() {
-		System.out.println("\n   Register Courses    ");
+		System.out.println("\n=====Register Courses=====");
 		System.out.println("Enter KKU ID:");
 		String id = input.nextLine().trim();
 		
@@ -190,7 +190,7 @@ public class InternshipSystem {
 	
 	//Option 3:
 	public static void registerGraduationProject() {
-		System.out.println("\n   Register Graduation Project    ");
+		System.out.println("\n=====Register Graduation Project=====");
 		System.out.println("Enter KKU ID:");
 		String id = input.nextLine().trim();
 		
@@ -362,7 +362,7 @@ public class InternshipSystem {
 	
 	// Option 4:
 	public static void findMatchingCenters() {
-		System.out.println("\nFind Matching Training Centers");
+		System.out.println("\n=====Find Matching Training Centers=====");
 		System.out.println("Enter KKU ID:");
 		
 		String id = input.nextLine().trim();
@@ -417,7 +417,7 @@ public class InternshipSystem {
 	}
 	//Option 5: 
 	public static void assignInternship() {
-		System.out.println("\nAssign Internship");
+		System.out.println("\n=====Assign Internship=====");
 		System.out.println("Enter KKU ID:");
 		
 		String id = input.nextLine().trim();
@@ -465,7 +465,7 @@ public class InternshipSystem {
   }
 	// Option 6:
 	public static void searchStudent () {
-		System.out.println("\nSearch Student");
+		System.out.println("\n=====Search Student=====");
 		System.out.println("Enter KKU ID:");
 		
 		String id = input.nextLine().trim();
@@ -514,7 +514,7 @@ public class InternshipSystem {
 	}
 	//Option 7:
 	public static void displayAllStudents() {
-		System.out.println("\nDisplay All Students");
+		System.out.println("\n=====Display All Students=====");
 		
 		if (students.isEmpty()) {
 			System.out.println("No students registered.");
